@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
-    "seed": "node scripts/direct_seed.js",
+    "seed": "node scripts/upload_to_bigquery.js",
     "lint": "eslint"
   },
   "dependencies": {

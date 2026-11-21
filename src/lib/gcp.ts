@@ -473,15 +473,5 @@ Rules:
     }
   }
 
-  // Graceful fallback if OCR fails
-  return {
-    vendor_name: 'सब्जी मंडी विक्रेता',
-    bill_date: new Date().toISOString().split('T')[0],
-    items: [
-      { item_name: 'प्याज (Onions)', quantity: 20, unit: 'kg', rate: 35, row_total: 700 },
-      { item_name: 'टमाटर (Tomatoes)', quantity: 15, unit: 'kg', rate: 40, row_total: 600 },
-      { item_name: 'अदरक लहसुन (Ginger Garlic)', quantity: 3, unit: 'kg', rate: 120, row_total: 360 }
-    ],
-    total_amount: 1660
-  };
+  throw new Error('Gemini OCR could not extract receipt items from image');
 }

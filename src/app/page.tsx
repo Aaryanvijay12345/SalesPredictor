@@ -117,13 +117,10 @@ export default function HomePage() {
   const [liveTime, setLiveTime] = useState('');
   useEffect(() => {
     const update = () => {
-      setLiveTime(
-        new Date().toLocaleTimeString('en-IN', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        })
-      );
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      setLiveTime(`${hh}:${mm}`);
     };
     update();
     const timer = setInterval(update, 1000);
@@ -275,51 +272,82 @@ export default function HomePage() {
     fetchMandiPurchases();
   }, [fetchMandiPurchases]);
 
+  // Web Speech API fallback helper
+  const speakWithBrowserTTS = (text: string, langCode: string) => {
+    if (!text || typeof window === 'undefined' || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const langConfig = SUPPORTED_LANGUAGES[langCode];
+    utter.lang = langConfig?.ttsLangCode || 'hi-IN';
+    utter.rate = langConfig?.speakingRate || 1.05;
+    utter.onstart = () => setIsPlaying(true);
+    utter.onend = () => { setIsPlaying(false); setPlayingShiftId(null); };
+    utter.onerror = () => { setIsPlaying(false); setPlayingShiftId(null); };
+    window.speechSynthesis.speak(utter);
+  };
+
   // Handle Audio Playback
   const togglePlayMainAudio = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (!audioRef.current) return;
 
-    if (playingShiftId !== null) {
+    if (isPlaying) {
+      // Stop whatever is playing
+      if (audioRef.current) { audioRef.current.pause(); }
+      if (typeof window !== 'undefined' && window.speechSynthesis) { window.speechSynthesis.cancel(); }
+      setIsPlaying(false);
+      setPlayingShiftId(null);
+      return;
+    }
+
+    if (playingShiftId !== null && audioRef.current) {
       audioRef.current.src = activeAudioSrc;
       setPlayingShiftId(null);
     }
 
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
+    // Try GCS audio first; fall back to Web Speech API
+    if (activeAudioSrc) {
+      if (!audioRef.current) return;
+      audioRef.current.src = activeAudioSrc;
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch((err) => {
-          console.warn('Audio playback error:', err);
-          setIsPlaying(false);
+        .catch(() => {
+          // GCS audio failed — use browser TTS
+          speakWithBrowserTTS(spokenScript, currentLang);
         });
+    } else {
+      // No audio URL — use browser TTS directly
+      speakWithBrowserTTS(spokenScript, currentLang);
     }
   };
 
   const playShiftAudio = (shift: ShiftHistoryEntry, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!audioRef.current) return;
 
     if (playingShiftId === shift.id && isPlaying) {
-      audioRef.current.pause();
+      if (audioRef.current) { audioRef.current.pause(); }
+      if (typeof window !== 'undefined' && window.speechSynthesis) { window.speechSynthesis.cancel(); }
       setIsPlaying(false);
+      setPlayingShiftId(null);
       return;
     }
 
     const src = shift.audio_url || activeAudioSrc;
-    if (src) {
+    if (src && audioRef.current) {
       audioRef.current.src = src;
       setPlayingShiftId(shift.id);
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch((err) => {
-          console.warn('Audio play error:', err);
-          setIsPlaying(false);
+        .catch(() => {
+          // Fall back to browser TTS using shift bulletin text
+          setPlayingShiftId(shift.id);
+          speakWithBrowserTTS(shift.details || shift.summary, shift.lang_code || currentLang);
         });
+    } else {
+      // No audio at all — use browser TTS
+      setPlayingShiftId(shift.id);
+      speakWithBrowserTTS(shift.details || shift.summary, shift.lang_code || currentLang);
     }
   };
 

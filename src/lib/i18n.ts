@@ -1,4 +1,4 @@
-export interface LanguageVoiceConfig {
+﻿export interface LanguageVoiceConfig {
   code: string;
   name: string;
   nativeName: string;
@@ -267,6 +267,8 @@ export const UI_TRANSLATIONS: Record<string, Record<string, string>> = {
     col_qty: 'পরিমাণ',
     col_unit: 'একক',
     col_rate: 'দর (₹)',
+    status_completed: 'সম্পন্ন',
+    status_active: 'সক্রিয়',
     col_total: 'মোট (₹)',
     btn_add_item: '+ নতুন পণ্য যোগ করুন',
     grand_total: 'সর্বমোট (₹):',
@@ -330,6 +332,8 @@ export const UI_TRANSLATIONS: Record<string, Record<string, string>> = {
     col_qty: 'प्रमाण',
     col_unit: 'एकक',
     col_rate: 'दर (₹)',
+    status_completed: 'पूर्ण',
+    status_active: 'सक्रिय',
     col_total: 'एकूण (₹)',
     btn_add_item: '+ नवीन वस्तू जोडा',
     grand_total: 'एकूण रक्कम (₹):',
@@ -393,6 +397,8 @@ export const UI_TRANSLATIONS: Record<string, Record<string, string>> = {
     col_qty: 'જથ્થો',
     col_unit: 'એકમ',
     col_rate: 'ભાવ (₹)',
+    status_completed: 'પૂર્ણ',
+    status_active: 'સક્રિય',
     col_total: 'કુલ (₹)',
     btn_add_item: '+ નવી સામગ્રી ઉમેરો',
     grand_total: 'કુલ સરવાળો (₹):',
@@ -456,6 +462,8 @@ export const UI_TRANSLATIONS: Record<string, Record<string, string>> = {
     col_qty: 'அளவு',
     col_unit: 'அலகு',
     col_rate: 'விலை (₹)',
+    status_completed: 'முடிந்தது',
+    status_active: 'செயலில்',
     col_total: 'மொத்தம் (₹)',
     btn_add_item: '+ புதிய பொருள் சேர்',
     grand_total: 'மொத்த தொகை (₹):',
@@ -519,6 +527,8 @@ export const UI_TRANSLATIONS: Record<string, Record<string, string>> = {
     col_qty: 'పరిమాణం',
     col_unit: 'యూనిట్',
     col_rate: 'ధర (₹)',
+    status_completed: 'పూర్తయింది',
+    status_active: 'చురుకుగా',
     col_total: 'మొత్తం (₹)',
     btn_add_item: '+ కొత్త వస్తువు జోడించండి',
     grand_total: 'మొత్తం మొత్తం (₹):',
@@ -582,6 +592,8 @@ export const UI_TRANSLATIONS: Record<string, Record<string, string>> = {
     col_qty: 'ਮਾਤਰਾ',
     col_unit: 'ਇਕਾਈ',
     col_rate: 'ਦਰ (₹)',
+    status_completed: 'ਪੂਰਾ',
+    status_active: 'ਸਰਗਰਮ',
     col_total: 'ਕੁੱਲ (₹)',
     btn_add_item: '+ ਨਵੀਂ ਚੀਜ਼ ਜੋੜੋ',
     grand_total: 'ਕੁੱਲ ਜੋੜ (₹):',
